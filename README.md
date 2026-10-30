@@ -23,4 +23,4 @@ Commands that call Jira or Azure DevOps require the corresponding credentials an
 
 Push a version tag such as `v1.0.0` to run the GitHub Actions workflow. The workflow runs unit tests and attaches `release-management-tools-linux-x64.tar.gz` to the GitHub Release. The package is a self-contained Linux x64 executable and does not require the .NET runtime on the consuming agent.
 
-The release-process templates in the `release-process-azure-pipelines` repository download this package. The pipeline repository's `scripts/run-release-tools.sh` pins the package version and can be overridden with the `RELEASE_TOOLS_VERSION` environment variable.
+The release-process templates in the `release-process-azure-pipelines` repository download this package. Its `scripts/ReleaseProcess.cs` launcher defaults to `v1.0.0`; set the `RELEASE_TOOLS_VERSION` environment variable to select another version.
