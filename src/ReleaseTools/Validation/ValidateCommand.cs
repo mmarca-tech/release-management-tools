@@ -1,9 +1,3 @@
-using System.Diagnostics;
-using System.Globalization;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 
 namespace PipelineTools.ReleaseTools;
@@ -22,30 +16,6 @@ static class ValidateCommand
         }
 
         Console.WriteLine($"Validating repository: {repoRoot}");
-
-        var releaseProcessScript = Path.Combine(repoRoot, "scripts", "ReleaseProcess.cs");
-        Console.WriteLine("Checking .NET file-based program syntax...");
-        var buildOutputPath = Path.Combine(Path.GetTempPath(), $"release-process-validate-{Guid.NewGuid():N}");
-        var buildResult = await ProcessRunner.RunAsync(
-            "dotnet",
-            ["build", "--nologo", releaseProcessScript, "--output", buildOutputPath],
-            repoRoot,
-            throwOnError: false);
-        if (buildResult.ExitCode != 0)
-        {
-            AddError($"dotnet build failed for '{releaseProcessScript}'. {buildResult.StandardError}{buildResult.StandardOutput}");
-        }
-        else if (Directory.Exists(buildOutputPath))
-        {
-            try
-            {
-                Directory.Delete(buildOutputPath, recursive: true);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"WARNING: Failed to remove validation build output '{buildOutputPath}': {ex.Message}");
-            }
-        }
 
         var yamlFiles = Directory.GetFiles(repoRoot, "*.yml")
             .Concat(Directory.GetFiles(repoRoot, "*.yaml"))
@@ -78,7 +48,6 @@ static class ValidateCommand
         var textFiles = Directory.GetFiles(repoRoot, "*.md")
             .Concat(Directory.Exists(Path.Combine(repoRoot, "docs")) ? Directory.GetFiles(Path.Combine(repoRoot, "docs"), "*.md") : [])
             .Concat(yamlFiles)
-            .Concat(File.Exists(releaseProcessScript) ? [releaseProcessScript] : [])
             .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
             .ToArray();
 

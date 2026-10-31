@@ -11,10 +11,10 @@ dotnet test tests/ReleaseTools.Tests/ReleaseTools.Tests.csproj
 
 ## Run Locally
 
-Run a command through the project:
+Run a command through the root-level file launcher or the project:
 
 ```powershell
-dotnet run --project src/ReleaseTools/ReleaseTools.csproj -- --help
+dotnet run --file .\ReleaseProcess.cs -- --help
 ```
 
 Commands that call Jira or Azure DevOps require the corresponding credentials and pipeline environment variables. Use `--help` to list available commands.
@@ -23,4 +23,4 @@ Commands that call Jira or Azure DevOps require the corresponding credentials an
 
 Push a version tag such as `v1.0.0` to run the GitHub Actions workflow. The workflow runs unit tests and attaches `release-management-tools-linux-x64.tar.gz` to the GitHub Release. The package is a self-contained Linux x64 executable and does not require the .NET runtime on the consuming agent.
 
-The release-process templates in the `release-process-azure-pipelines` repository download this package. Its `scripts/ReleaseProcess.cs` launcher defaults to `v1.0.0`; set the `RELEASE_TOOLS_VERSION` environment variable to select another version.
+The release-process templates in the `release-process-azure-pipelines` repository include `templates/install-release-tools.yaml` to download this package, then invoke it directly. The default is `v1.0.0`; set `RELEASE_TOOLS_VERSION` to select another version. The root-level `ReleaseProcess.cs` launcher in this repository is for local development.

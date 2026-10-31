@@ -74,7 +74,7 @@ public static class ReleaseToolsProgram
 
     private static void WriteHelp()
     {
-        Console.WriteLine("Usage: dotnet run --project src/ReleaseTools/ReleaseTools.csproj -- <command> [options]");
+        Console.WriteLine("Usage: dotnet run --file ReleaseProcess.cs -- <command> [options]");
         Console.WriteLine();
         Console.WriteLine("Commands:");
         Console.WriteLine("  create-release-ticket");
